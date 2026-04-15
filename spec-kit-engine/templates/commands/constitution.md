@@ -144,12 +144,17 @@ Follow this execution flow:
 
 1. Load the existing constitution at `.specify/memory/constitution.md`.
    - Identify every placeholder token of the form `[ALL_CAPS_IDENTIFIER]`.
-   **IMPORTANT**: The user might require less or more principles than the ones used in the template. If a number is specified, respect that - follow the general template. You will update the doc accordingly.
+  **IMPORTANT**: The 8 DigiScrum Core Principles defined in this command are
+  immutable baseline requirements. User input can add constraints but MUST NOT
+  remove, rename, replace, reorder, or weaken those baseline principles.
 
 2. Collect/derive values for placeholders:
   - First, apply the Mandatory Baseline Rules from this prompt.
   - Treat those baseline rules as required minimum constraints.
   - If user input adds stricter constraints, keep both (baseline + user rules).
+  - If user input conflicts with baseline rules (example: "use angular 21 and
+    dotnet 8.0" replacing architecture principles), treat user input as
+    additive context only and keep all baseline principles unchanged.
   - Do not remove, dilute, or skip any baseline rule.
    - If user input (conversation) supplies a value, use it.
    - Otherwise infer from existing repo context (README, docs, prior constitution versions if embedded).
@@ -161,6 +166,10 @@ Follow this execution flow:
    - If version bump type ambiguous, propose reasoning before finalizing.
 
 3. Draft the updated constitution content:
+   - Preserve a dedicated `## Core Principles` section containing the same
+     eight DigiScrum principles from this command.
+   - You MAY append project-specific sub-points under a principle, but you MUST
+     keep each baseline principle heading and normative text semantics intact.
    - Replace every placeholder with concrete text (no bracketed tokens left except intentionally retained template slots that the project has chosen not to define yet—explicitly justify any left).
    - Preserve heading hierarchy and comments can be removed once replaced unless they still add clarifying guidance.
    - Ensure each Principle section: succinct name line, paragraph (or bullet list) capturing non‑negotiable rules, explicit rationale if not obvious.
@@ -187,10 +196,23 @@ Follow this execution flow:
    - No remaining unexplained bracket tokens.
    - Version line matches report.
    - Dates ISO format YYYY-MM-DD.
-  - All Mandatory Baseline Rules are explicitly present in the final constitution.
+  - All 8 Mandatory DigiScrum Core Principles are explicitly present in the
+    final constitution under `## Core Principles`.
+  - Principle titles match exactly:
+    - `I. Component Isolation and Modularity (NON-NEGOTIABLE)`
+    - `II. Version Compliance (NON-NEGOTIABLE)`
+    - `III. SOLID Principles Enforcement (NON-NEGOTIABLE)`
+    - `IV. Clean Architecture Compliance`
+    - `V. Simplicity and Minimalism`
+    - `VI. Multi-Context Adaptability`
+    - `VII. Universal Validation Execution`
+    - `VIII. Automated Fix Loop`
+  - If any baseline principle is missing, altered, or weakened: STOP, do not
+    write the file, and regenerate until compliance is achieved.
    - Principles are declarative, testable, and free of vague language ("should" → replace with MUST/SHOULD rationale where appropriate).
 
-7. Write the completed constitution back to `.specify/memory/constitution.md` (overwrite).
+7. Write the completed constitution back to `.specify/memory/constitution.md`
+   (overwrite) ONLY after all validation checks pass.
 
 8. Output a final summary to the user with:
    - New version and bump rationale.
